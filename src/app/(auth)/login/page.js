@@ -417,7 +417,7 @@ export default function LoginPage() {
                   uppercase
                 "
               >
-                Production Control System
+                Login
               </p>
 
             </div>

@@ -12,12 +12,25 @@ import NizaamoLogo from "@/components/NizaamoLogo";
 
 export default function Layout({ children }) {
 
-  const [open, setOpen] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("sidebar-open") === "false" ? false : true;
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+
+    // MOBILE
+    if (window.innerWidth < 768) {
+
+      setOpen(false);
+
+      return;
     }
-    return true;
-  });
+
+    // DESKTOP
+    const saved =
+      localStorage.getItem("sidebar-open");
+
+    setOpen(saved === "true");
+
+  }, []);
   const [profileOpen, setProfileOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(false);
@@ -155,6 +168,31 @@ export default function Layout({ children }) {
     });
   };
 
+  useEffect(() => {
+
+    const handleResize = () => {
+
+      if (window.innerWidth < 768) {
+
+        setOpen(false);
+      }
+    };
+
+    handleResize();
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+
+  }, []);
+
   const updateProfile = async () => {
     try {
       const data = new FormData();
@@ -210,16 +248,55 @@ export default function Layout({ children }) {
 
             {/* MENU BUTTON */}
             <button
-              onClick={() => setOpen(!open)}
+              onClick={() => {
+
+                const newState = !open;
+
+                setOpen(newState);
+
+                // SAVE ONLY DESKTOP STATE
+                if (window.innerWidth >= 768) {
+
+                  localStorage.setItem(
+                    "sidebar-open",
+                    newState.toString()
+                  );
+                }
+              }}
               className="p-2 rounded-md hover:bg-blue-50 transition"
             >
               <Menu className="text-blue-600" size={18} />
             </button>
 
             {/* MOBILE BRAND TEXT */}
-            <div className="md:hidden">
-              <NizaamoLogo />
-            </div>
+
+<div className="md:hidden select-none">
+
+  <h1
+    className="
+      text-[25px]
+      font-extrabold
+      tracking-[0.22em]
+      leading-none
+    "
+  >
+
+    <span className="text-slate-900">
+      NIZA
+    </span>
+
+    <span
+      className="
+        text-cyan-500
+        [text-shadow:0_0_12px_rgba(6,182,212,0.25)]
+      "
+    >
+      AMO
+    </span>
+
+  </h1>
+
+</div>
 
           </div>
 
