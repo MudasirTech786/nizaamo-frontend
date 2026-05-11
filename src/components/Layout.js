@@ -270,33 +270,33 @@ export default function Layout({ children }) {
 
             {/* MOBILE BRAND TEXT */}
 
-<div className="md:hidden select-none">
+            <div className="md:hidden select-none">
 
-  <h1
-    className="
+              <h1
+                className="
       text-[25px]
       font-extrabold
       tracking-[0.22em]
       leading-none
     "
-  >
+              >
 
-    <span className="text-slate-900">
-      NIZA
-    </span>
+                <span className="text-slate-900">
+                  NIZA
+                </span>
 
-    <span
-      className="
+                <span
+                  className="
         text-cyan-500
         [text-shadow:0_0_12px_rgba(6,182,212,0.25)]
       "
-    >
-      AMO
-    </span>
+                >
+                  AMO
+                </span>
 
-  </h1>
+              </h1>
 
-</div>
+            </div>
 
           </div>
 
@@ -547,82 +547,99 @@ export default function Layout({ children }) {
                     {/* EDIT PROFILE */}
                     <button
                       onClick={() => {
+                        // ✅ CHECK IF SUPER ADMIN
+                        if (user?.name === "Super Admin") {
+                          toast.error("Super Admin profile cannot be edited");
+                          return;
+                        }
                         setEditOpen(true);
                         setProfileOpen(false);
                       }}
-                      className="
-            group
-            w-full
-            flex
-            items-center
-            gap-3
-            rounded-2xl
-            px-3
-            py-3
-            hover:bg-blue-50
-            transition-all
-            duration-200
-          "
+                      disabled={user?.name === "Super Admin"}
+                      className={`
+      group
+      w-full
+      flex
+      items-center
+      gap-3
+      rounded-2xl
+      px-3
+      py-3
+      transition-all
+      duration-200
+      ${user?.name === "Super Admin"
+                          ? "opacity-50 cursor-not-allowed"
+                          : "hover:bg-blue-50"
+                        }
+    `}
+                      title={
+                        user?.name === "Super Admin"
+                          ? "Super Admin profile cannot be edited"
+                          : "Manage your account"
+                      }
                     >
-
-                      <div className="
-            w-10
-            h-10
-            rounded-xl
-            bg-blue-100
-            text-blue-700
-            flex
-            items-center
-            justify-center
-            group-hover:scale-105
-            transition-all
-          ">
-                        ✦
+                      <div className={`
+      w-10
+      h-10
+      rounded-xl
+      flex
+      items-center
+      justify-center
+      group-hover:scale-105
+      transition-all
+      ${user?.name === "Super Admin"
+                          ? "bg-gray-100 text-gray-400"
+                          : "bg-blue-100 text-blue-700"
+                        }
+    `}>
+                        {user?.name === "Super Admin" ? "🔒" : "✦"}
                       </div>
 
                       <div className="flex flex-col items-start">
-                        <span className="text-sm font-medium text-slate-700">
+                        <span className={`text-sm font-medium ${user?.name === "Super Admin"
+                            ? "text-gray-400"
+                            : "text-slate-700"
+                          }`}>
                           Edit Profile
                         </span>
 
                         <span className="text-[11px] text-slate-400">
-                          Manage your account
+                          {user?.name === "Super Admin"
+                            ? "Protected account"
+                            : "Manage your account"}
                         </span>
                       </div>
-
                     </button>
-
 
                     {/* LOGOUT */}
                     <button
                       onClick={handleLogout}
                       className="
-            group
-            w-full
-            flex
-            items-center
-            gap-3
-            rounded-2xl
-            px-3
-            py-3
-            hover:bg-red-50
-            transition-all
-            duration-200
-          "
+      group
+      w-full
+      flex
+      items-center
+      gap-3
+      rounded-2xl
+      px-3
+      py-3
+      hover:bg-red-50
+      transition-all
+      duration-200
+    "
                     >
-
                       <div className="
-            w-10
-            h-10
-            rounded-xl
-            bg-red-100
-            text-red-500
-            flex
-            items-center
-            justify-center
-            group-hover:scale-105
-            transition-all
-          ">
+      w-10
+      h-10
+      rounded-xl
+      bg-red-100
+      text-red-500
+      flex
+      items-center
+      justify-center
+      group-hover:scale-105
+      transition-all
+    ">
                         ⎋
                       </div>
 
@@ -635,7 +652,6 @@ export default function Layout({ children }) {
                           End your session
                         </span>
                       </div>
-
                     </button>
 
                   </div>
