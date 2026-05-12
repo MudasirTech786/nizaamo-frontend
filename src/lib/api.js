@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://72.62.71.176//api",
+  baseURL: "http://72.62.71.176/api",
 });
 
 // 🔥 safe cookie reader
