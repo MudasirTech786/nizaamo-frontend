@@ -64,20 +64,27 @@ export default function LoginPage() {
 
     } catch (err) {
 
-      const status =
-        err?.response?.status;
+      console.log("🔥 LOGIN ERROR FULL DEBUG:", err);
 
-      if (status === 401) {
+      console.log("🔥 RESPONSE:", err?.response);
+      console.log("🔥 STATUS:", err?.response?.status);
+      console.log("🔥 DATA:", err?.response?.data);
+      console.log("🔥 MESSAGE:", err?.message);
 
-        toast.error(
-          "Invalid credentials"
-        );
-
-      } else {
-
-        toast.error(
-          "System connection failed"
-        );
+      if (!err?.response) {
+        toast.error("Network error (API not reachable)");
+      }
+      else if (err?.response?.status === 401) {
+        toast.error("Invalid credentials");
+      }
+      else if (err?.response?.status === 419) {
+        toast.error("CSRF token mismatch (Sanctum issue)");
+      }
+      else if (err?.response?.status >= 500) {
+        toast.error("Server error (Laravel crashed)");
+      }
+      else {
+        toast.error("System connection failed");
       }
 
     } finally {
