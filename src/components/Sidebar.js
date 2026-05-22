@@ -188,26 +188,28 @@ export default function Sidebar({ open, setOpen }) {
   `;
 
   const subMenuClass = (path) => `
-    block
-    rounded-xl
-    px-4
-    py-2.5
-    text-sm
-    transition-all
-    duration-200
+  flex
+  items-center
+  rounded-xl
+  px-3
+  py-2
+  text-[13px]
+  font-medium
+  transition-all
+  duration-200
 
-    ${isActive(path)
+  ${isActive(path)
       ? `
-        bg-cyan-500/10
-        text-cyan-300
-      `
+      bg-cyan-500/10
+      text-cyan-300
+    `
       : `
-        text-white/45
-        hover:bg-white/[0.03]
-        hover:text-white
-      `
+      text-white/45
+      hover:bg-white/[0.03]
+      hover:text-white
+    `
     }
-  `;
+`;
 
   // =========================================
   // LOADING
@@ -688,7 +690,7 @@ export default function Sidebar({ open, setOpen }) {
                       >
                         Calendar View
                       </Link>
-                      
+
                       {/* CREW */}
                       <Link
                         href="/dashboard/shoots/scheduling"
@@ -744,6 +746,8 @@ export default function Sidebar({ open, setOpen }) {
 
             {/* INVENTORY */}
 
+            {/* INVENTORY */}
+
             {can("products.view") && (
 
               <div className="mt-2">
@@ -772,14 +776,14 @@ export default function Sidebar({ open, setOpen }) {
                     <ChevronDown
                       size={16}
                       className={`
-                        transition-all
-                        duration-300
+            transition-all
+            duration-300
 
-                        ${activeMenu === "inventory"
+            ${activeMenu === "inventory"
                           ? "rotate-180 text-cyan-300"
                           : "text-white/30"
                         }
-                      `}
+          `}
                     />
 
                   )}
@@ -788,28 +792,192 @@ export default function Sidebar({ open, setOpen }) {
 
                 {isExpanded && activeMenu === "inventory" && (
 
-                  <div className="ml-14 mt-2 border-l border-white/[0.05] pl-4 space-y-2">
+                  <div className="ml-14 mt-2 border-l border-white/[0.05] pl-4 space-y-1">
+
+                    {/* ITEMS */}
 
                     <Link
-                      href="/dashboard/inventory/products"
-                      className={subMenuClass("/dashboard/products")}
+                      href="/dashboard/inventory/items"
+                      className={subMenuClass("/dashboard/inventory/items")}
                     >
-                      Products
+                      Items
                     </Link>
+
+                    {/* CATEGORIES */}
 
                     <Link
                       href="/dashboard/inventory/categories"
-                      className={subMenuClass("/dashboard/categories")}
+                      className={subMenuClass("/dashboard/inventory/categories")}
                     >
                       Categories
                     </Link>
 
+                    {/* STOCK */}
+
                     <Link
                       href="/dashboard/inventory/stock"
-                      className={subMenuClass("/dashboard/stock")}
+                      className={subMenuClass("/dashboard/inventory/stock")}
                     >
                       Stock
                     </Link>
+
+                    {/* MOVEMENTS */}
+
+                    <Link
+                      href="/dashboard/inventory/movements"
+                      className={subMenuClass("/dashboard/inventory/movements")}
+                    >
+                      Movements
+                    </Link>
+
+                    {/* ================= USAGE ================= */}
+
+                    <details className="group">
+
+                      <summary
+                        className="
+              flex
+              cursor-pointer
+              list-none
+              items-center
+              justify-between
+              rounded-xl
+              px-3
+              py-2
+              text-[13px]
+              font-medium
+              text-white/55
+              transition-all
+              duration-200
+              hover:bg-white/[0.03]
+              hover:text-white
+            "
+                      >
+
+                        <span>Usage</span>
+
+                        <ChevronDown
+                          size={14}
+                          className="
+                transition-transform
+                duration-300
+                group-open:rotate-180
+              "
+                        />
+
+                      </summary>
+
+                      <div className="
+  ml-4
+  mt-1
+  border-l
+  border-white/[0.04]
+  pl-4
+  space-y-1
+">
+
+                        <Link
+                          href="/dashboard/inventory/usage/active"
+                          className={subMenuClass("/dashboard/inventory/usage/active")}
+                        >
+                          Active Usage
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/usage/allocations"
+                          className={subMenuClass("/dashboard/inventory/usage/allocations")}
+                        >
+                          Shoot Allocations
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/usage/checkouts"
+                          className={subMenuClass("/dashboard/inventory/usage/checkouts")}
+                        >
+                          Check-Outs
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/usage/returns"
+                          className={subMenuClass("/dashboard/inventory/usage/returns")}
+                        >
+                          Returns
+                        </Link>
+
+                      </div>
+
+                    </details>
+
+                    {/* ================= DAMAGES ================= */}
+
+                    <details className="group">
+
+                      <summary
+                        className="
+              flex
+              cursor-pointer
+              list-none
+              items-center
+              justify-between
+              rounded-xl
+              px-3
+              py-2
+              text-[13px]
+              font-medium
+              text-white/55
+              transition-all
+              duration-200
+              hover:bg-white/[0.03]
+              hover:text-white
+            "
+                      >
+
+                        <span>Damages</span>
+
+                        <ChevronDown
+                          size={14}
+                          className="
+                transition-transform
+                duration-300
+                group-open:rotate-180
+              "
+                        />
+
+                      </summary>
+
+                      <div className="ml-4 mt-1 border-l border-white/[0.04] pl-4 space-y-1">
+
+                        <Link
+                          href="/dashboard/inventory/damages/damage-reports"
+                          className={subMenuClass("/dashboard/inventory/damages/reports")}
+                        >
+                          Damage Reports
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/damages/inspections"
+                          className={subMenuClass("/dashboard/inventory/damages/inspections")}
+                        >
+                          Inspections
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/damages/repairs"
+                          className={subMenuClass("/dashboard/inventory/damages/repairs")}
+                        >
+                          Repairs
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/damages/write-offs"
+                          className={subMenuClass("/dashboard/inventory/damages/writeoffs")}
+                        >
+                          Write-Offs
+                        </Link>
+
+                      </div>
+
+                    </details>
 
                   </div>
 

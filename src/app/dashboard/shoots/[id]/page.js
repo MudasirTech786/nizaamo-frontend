@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Film,
   Car,
+  Package,
 } from "lucide-react";
 
 /* ========================================================= */
@@ -890,6 +891,242 @@ export default function ShootDetailsPage() {
         </div>
 
         {/* ========================================================= */}
+        {/* INVENTORY */}
+        {/* ========================================================= */}
+
+        <div className="mt-6">
+
+          <Card title="Inventory Allocation">
+
+            {!shoot.inventory_usages ||
+              shoot.inventory_usages.length === 0 ? (
+
+              <div
+                className="
+          rounded-2xl
+          border
+          border-dashed
+          border-gray-300
+          py-14
+          text-center
+        "
+              >
+
+                <Package
+                  size={42}
+                  className="
+            mx-auto
+            text-gray-300
+          "
+                />
+
+                <h3 className="
+          mt-4
+          text-lg
+          font-semibold
+          text-gray-900
+        ">
+
+                  No inventory allocated
+
+                </h3>
+
+                <p className="
+          mt-2
+          text-sm
+          text-gray-500
+        ">
+
+                  Equipment allocations will appear here
+
+                </p>
+
+              </div>
+
+            ) : (
+
+              <div className="space-y-4">
+
+                {shoot.inventory_usages.map(
+                  (usage) => (
+
+                    <div
+                      key={usage.id}
+                      className="
+                rounded-2xl
+                border
+                border-gray-200
+                p-5
+              "
+                    >
+
+                      <div className="
+                flex
+                flex-col
+                gap-4
+                lg:flex-row
+                lg:items-center
+                lg:justify-between
+              ">
+
+                        {/* LEFT */}
+
+                        <div>
+
+                          <h3 className="
+                    text-lg
+                    font-bold
+                    text-gray-900
+                  ">
+
+                            {usage.item?.name}
+
+                          </h3>
+
+                          <p className="
+                    mt-1
+                    text-sm
+                    text-gray-500
+                  ">
+
+                            {usage.item?.sku ||
+                              "No SKU"}
+
+                          </p>
+
+                        </div>
+
+                        {/* STATUS */}
+
+                        <div
+                          className={`
+                    inline-flex
+                    items-center
+                    rounded-full
+                    px-4
+                    py-2
+                    text-xs
+                    font-semibold
+
+                    ${usage.status ===
+                              "reserved"
+                              ? "bg-yellow-100 text-yellow-700"
+
+                              : usage.status ===
+                                "checked_out"
+                                ? "bg-blue-100 text-blue-700"
+
+                                : usage.status ===
+                                  "partially_returned"
+                                  ? "bg-orange-100 text-orange-700"
+
+                                  : "bg-green-100 text-green-700"
+                            }
+                  `}
+                        >
+
+                          {usage.status
+                            ?.replaceAll(
+                              "_",
+                              " "
+                            )}
+
+                        </div>
+
+                      </div>
+
+                      {/* GRID */}
+
+                      <div className="
+                mt-5
+                grid
+                grid-cols-1
+                gap-4
+                md:grid-cols-2
+                lg:grid-cols-4
+              ">
+
+                        <InventoryInfo
+                          label="Quantity"
+                          value={
+                            usage.quantity
+                          }
+                        />
+
+                        <InventoryInfo
+                          label="Returned"
+                          value={
+                            usage.returned_quantity
+                          }
+                        />
+
+                        <InventoryInfo
+                          label="Lost"
+                          value={
+                            usage.lost_quantity
+                          }
+                        />
+
+                        <InventoryInfo
+                          label="Assigned To"
+                          value={
+                            usage.assigned_user
+                              ?.name || "—"
+                          }
+                        />
+
+                      </div>
+
+                      {/* NOTES */}
+
+                      {usage.notes && (
+
+                        <div className="
+                  mt-5
+                  rounded-2xl
+                  bg-gray-50
+                  p-4
+                ">
+
+                          <p className="
+                    text-xs
+                    font-semibold
+                    uppercase
+                    tracking-wider
+                    text-gray-400
+                  ">
+
+                            Notes
+
+                          </p>
+
+                          <p className="
+                    mt-2
+                    text-sm
+                    text-gray-700
+                  ">
+
+                            {usage.notes}
+
+                          </p>
+
+                        </div>
+
+                      )}
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+            )}
+
+          </Card>
+
+        </div>
+        {/* ========================================================= */}
         {/* QUICK ACTIONS */}
         {/* ========================================================= */}
 
@@ -942,6 +1179,30 @@ export default function ShootDetailsPage() {
               >
 
                 Manage Logistics
+
+                <ChevronRight size={16} />
+
+              </Link>
+
+              <Link
+                href={`/dashboard/shoots/${shoot.id}/inventory`}
+                className="
+    flex
+    items-center
+    justify-between
+    rounded-2xl
+    border
+    border-gray-200
+    px-4
+    py-4
+    text-sm
+    font-medium
+    text-gray-700
+    hover:bg-gray-50
+  "
+              >
+
+                Manage Inventory
 
                 <ChevronRight size={16} />
 
@@ -1056,6 +1317,53 @@ function SimpleInfoCard({
   );
 }
 
+/* ========================================================= */
+/* INVENTORY INFO */
+/* ========================================================= */
+
+function InventoryInfo({
+  label,
+  value,
+}) {
+  return (
+
+    <div
+      className="
+        rounded-2xl
+        border
+        border-gray-200
+        bg-gray-50
+        p-4
+      "
+    >
+
+      <p className="
+        text-xs
+        font-semibold
+        uppercase
+        tracking-wider
+        text-gray-400
+      ">
+
+        {label}
+
+      </p>
+
+      <h3 className="
+        mt-2
+        text-lg
+        font-bold
+        text-gray-900
+      ">
+
+        {value}
+
+      </h3>
+
+    </div>
+
+  );
+}
 /* ========================================================= */
 /* TRANSPORT ROW */
 /* ========================================================= */
