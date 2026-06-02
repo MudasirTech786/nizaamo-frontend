@@ -18,6 +18,7 @@ import {
   Settings,
   ChevronDown,
   Briefcase,
+  Landmark,
 } from "lucide-react";
 
 export default function Sidebar({ open, setOpen }) {
@@ -102,7 +103,14 @@ export default function Sidebar({ open, setOpen }) {
 
       setActiveMenu("productions");
 
-    } else {
+    } else if (
+      pathname.includes("/dashboard/finance")
+    ) {
+
+      setActiveMenu("finance");
+
+    }
+    else {
 
       setActiveMenu(null);
     }
@@ -148,6 +156,9 @@ export default function Sidebar({ open, setOpen }) {
     pathname.includes("/dashboard/shoots") ||
     pathname.includes("/dashboard/shoots/create") ||
     pathname.includes("/dashboard/shoots/crew");
+
+  const financeActive =
+    pathname.includes("/dashboard/finance");
 
   // =========================================
   // MENU STYLES
@@ -987,6 +998,111 @@ export default function Sidebar({ open, setOpen }) {
 
             )}
 
+            {/* FINANCE */}
+
+            {can("finance.view") && (
+
+              <div className="mt-2">
+
+                <button
+                  onClick={() => toggleMenu("finance")}
+                  className={menuClass(financeActive)}
+                >
+
+                  <div className="flex items-center gap-4">
+
+                    <MenuIcon active={financeActive}>
+                      <Landmark size={19} />
+                    </MenuIcon>
+
+                    {isExpanded && (
+                      <span className="font-medium">
+                        Finance
+                      </span>
+                    )}
+
+                  </div>
+
+                  {isExpanded && (
+
+                    <ChevronDown
+                      size={16}
+                      className={`
+            transition-all
+            duration-300
+
+            ${activeMenu === "finance"
+                          ? "rotate-180 text-cyan-300"
+                          : "text-white/30"
+                        }
+          `}
+                    />
+
+                  )}
+
+                </button>
+
+                {isExpanded && activeMenu === "finance" && (
+
+                  <div className="
+        ml-14
+        mt-2
+        border-l
+        border-white/[0.05]
+        pl-4
+        space-y-2
+      ">
+
+                    <Link
+                      href="/dashboard/finance"
+                      className={subMenuClass("/dashboard/finance")}
+                    >
+                      Production Finance
+                    </Link>
+
+                    <Link
+                      href="/dashboard/finance/expenses"
+                      className={subMenuClass("/dashboard/finance/expenses")}
+                    >
+                      Shoot Expenses
+                    </Link>
+
+                    <Link
+                      href="/dashboard/finance/crew-payroll"
+                      className={subMenuClass("/dashboard/finance/crew-payroll")}
+                    >
+                      Crew Payroll
+                    </Link>
+
+                    <Link
+                      href="/dashboard/finance/employee-payroll"
+                      className={subMenuClass("/dashboard/finance/employee-payroll")}
+                    >
+                      Employee Payroll
+                    </Link>
+
+                    <Link
+                      href="/dashboard/finance/payrolls"
+                      className={subMenuClass("/dashboard/finance/payrolls")}
+                    >
+                      Payroll Runs
+                    </Link>
+
+                    <Link
+                      href="/dashboard/finance/reports"
+                      className={subMenuClass("/dashboard/finance/reports")}
+                    >
+                      Reports
+                    </Link>
+
+                  </div>
+
+                )}
+
+              </div>
+
+            )}
+
             {/* WORKSPACE */}
 
             {can("workspaces.view") && (
@@ -1019,37 +1135,6 @@ export default function Sidebar({ open, setOpen }) {
 
             )}
 
-            {/* PAYROLL */}
-
-            {can("payroll.view") && (
-
-              <Link
-                href="/payrolls"
-                onClick={handleNavClick}
-                className={`mt-2 ${menuClass(
-                  isActive("/payrolls")
-                )}`}
-              >
-
-                <div className="flex items-center gap-4">
-
-                  <MenuIcon
-                    active={isActive("/payrolls")}
-                  >
-                    <DollarSign size={19} />
-                  </MenuIcon>
-
-                  {isExpanded && (
-                    <span className="font-medium">
-                      Payroll
-                    </span>
-                  )}
-
-                </div>
-
-              </Link>
-
-            )}
 
             {/* SETTINGS */}
 
