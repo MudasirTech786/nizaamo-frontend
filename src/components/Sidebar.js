@@ -339,72 +339,57 @@ export default function Sidebar({ open, setOpen }) {
             "
           >
 
+
             {/* DESKTOP LOGO */}
 
             <div
               className={`
-                hidden
-                md:flex
-                items-center
-                w-full
-
-                ${isExpanded
-                  ? "gap-3"
-                  : "justify-center"
-                }
-              `}
+    hidden
+    md:flex
+    items-center
+    justify-center
+    w-full
+    h-16
+  `}
             >
 
-              <div
-                className="
-                  w-12
-                  h-12
-                  rounded-2xl
-                  bg-cyan-500/10
-                  border
-                  border-cyan-400/10
-                  flex
-                  items-center
-                  justify-center
-                  shrink-0
-                "
-              >
+              {!isExpanded ? (
 
-                <img
-                  src="/images/icon.png"
-                  className="w-7 h-7 object-contain"
-                />
+                <div
+                  className="
+        w-12
+        h-12
+        rounded-2xl
+        bg-cyan-500/10
+        border
+        border-cyan-400/10
+        flex
+        items-center
+        justify-center
+        shrink-0
+      "
+                >
 
-              </div>
-
-              {isExpanded && (
-
-                <div className="min-w-0">
-
-                  <h1
-                    className="
-                      text-xl
-                      font-black
-                      tracking-[0.18em]
-                      text-white
-                    "
-                  >
-                    NIZAAMO
-                  </h1>
-
-                  <p
-                    className="
-                      text-[10px]
-                      uppercase
-                      tracking-[0.24em]
-                      text-cyan-300/40
-                      mt-1
-                    "
-                  >
-                    CONTROL SYSTEM
-                  </p>
+                  <img
+                    src="/images/Lumos.png"
+                    className="w-7 h-7 object-contain"
+                    alt="Lumos"
+                  />
 
                 </div>
+
+              ) : (
+
+                <img
+                  src="/images/LUMOS-LOGO.png"
+                  alt="Lumos"
+                  className="
+        h-72
+        mt-6
+        w-auto
+        object-contain
+      "
+                />
 
               )}
 

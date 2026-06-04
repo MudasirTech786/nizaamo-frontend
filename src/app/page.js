@@ -131,7 +131,7 @@ export default function Dashboard() {
 
                   <div className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_12px_rgba(74,222,128,0.8)]" />
 
-                  NIZAAMO Workforce OS
+                  Lumos Workforce OS
 
                 </div>
 

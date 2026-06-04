@@ -34,7 +34,7 @@ export default function NizamooLogo() {
         <rect x="42" y="6" width="3" height="3" fill="#60A5FA" />
       </g>
 
-      {/* TEXT: NIZAAMO */}
+      {/* TEXT: LUMOS */}
       <text
         x="55"
         y="34"
@@ -44,7 +44,7 @@ export default function NizamooLogo() {
         fill="#111827"
         letterSpacing="2"
       >
-        NIZAAMO
+        Lumos
       </text>
     </svg>
   );

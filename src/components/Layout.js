@@ -242,7 +242,7 @@ export default function Layout({ children }) {
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* ===== HEADER ===== */}
-        <header className="h-14 flex items-center justify-between px-4 md:px-6 bg-white border-b border-blue-100 shadow-sm sticky top-0 z-[60] relative">
+        <header className="h-14 flex items-center justify-between px-4 md:px-6 bg-[#070b14] md:bg-white border-b border-white/10 md:border-blue-100 shadow-sm sticky top-0 z-[60] relative">
 
           {/* LEFT SIDE (MENU + MOBILE BRAND) */}
           <div className="flex items-center gap-2">
@@ -266,36 +266,22 @@ export default function Layout({ children }) {
               }}
               className="p-2 rounded-md hover:bg-blue-50 transition"
             >
-              <Menu className="text-blue-600" size={18} />
+              <Menu className="text-blue-400" size={28} />
             </button>
 
             {/* MOBILE BRAND TEXT */}
 
-            <div className="md:hidden select-none">
+            <div className="md:hidden select-none ml-6">
 
-              <h1
+              <img
+                src="/images/LUMOS-LOGO-BLACK.jpeg"
+                alt="Lumos"
                 className="
-      text-[25px]
-      font-extrabold
-      tracking-[0.22em]
-      leading-none
+      h-10
+      w-auto
+      object-contain
     "
-              >
-
-                <span className="text-slate-900">
-                  NIZA
-                </span>
-
-                <span
-                  className="
-        text-cyan-500
-        [text-shadow:0_0_12px_rgba(6,182,212,0.25)]
-      "
-                >
-                  AMO
-                </span>
-
-              </h1>
+              />
 
             </div>
 
@@ -549,14 +535,14 @@ export default function Layout({ children }) {
                     <button
                       onClick={() => {
                         // ✅ CHECK IF SUPER ADMIN
-                        if (user?.name === "Super Admin") {
-                          toast.error("Super Admin profile cannot be edited");
-                          return;
-                        }
+                        // if (user?.name === "Super Admin") {
+                        //   toast.error("Super Admin profile cannot be edited");
+                        //   return;
+                        // }
                         setEditOpen(true);
                         setProfileOpen(false);
                       }}
-                      disabled={user?.name === "Super Admin"}
+                      // disabled={user?.name === "Super Admin"}
                       className={`
       group
       w-full

@@ -337,7 +337,7 @@ export default function LoginPage() {
 
                 {/* CAMERA IMAGE */}
                 <img
-                  src="/images/icon.png"
+                  src="/images/Lumos.png"
                   alt="Camera"
                   className="
                     relative
@@ -412,7 +412,7 @@ export default function LoginPage() {
                   uppercase
                 "
               >
-                NIZAAMO
+                LUMOS
               </h1>
 
               <p

@@ -134,7 +134,7 @@ export default function Dashboard() {
                 <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 backdrop-blur-xl">
                   <Sparkles size={14} className="text-cyan-300" />
                   <span className="text-xs tracking-[0.2em] uppercase text-blue-100">
-                    NIZAAMO ENTERPRISE OPERATING SYSTEM
+                    LUMOS ENTERPRISE OPERATING SYSTEM
                   </span>
                 </div>
 
@@ -143,7 +143,7 @@ export default function Dashboard() {
                 </h1>
 
                 <p className="mt-6 max-w-2xl text-blue-100/80 leading-relaxed text-base">
-                  Nizaamo is evolving into an AI-powered enterprise ecosystem where employees,
+                  LUMOS is evolving into an AI-powered enterprise ecosystem where employees,
                   events, payroll, inventory and automation operate through one unified neural workspace.
                 </p>
 
@@ -418,7 +418,7 @@ export default function Dashboard() {
                         </h4>
 
                         <p className="mt-1 text-xs text-slate-500">
-                          Synced with Nizaamo enterprise core.
+                          Synced with LUMOS enterprise core.
                         </p>
                       </div>
 
