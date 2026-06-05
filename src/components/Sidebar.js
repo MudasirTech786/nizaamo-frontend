@@ -104,7 +104,8 @@ export default function Sidebar({ open, setOpen }) {
       setActiveMenu("productions");
 
     } else if (
-      pathname.includes("/dashboard/finance")
+      pathname.includes("/dashboard/finance") ||
+      pathname.includes("/dashboard/invoices")
     ) {
 
       setActiveMenu("finance");
@@ -158,7 +159,8 @@ export default function Sidebar({ open, setOpen }) {
     pathname.includes("/dashboard/shoots/crew");
 
   const financeActive =
-    pathname.includes("/dashboard/finance");
+    pathname.includes("/dashboard/finance") ||
+    pathname.includes("/dashboard/invoices");
 
   // =========================================
   // MENU STYLES
@@ -696,41 +698,6 @@ export default function Sidebar({ open, setOpen }) {
                       >
                         Scheduling
                       </Link>
-
-
-
-                      <button
-                        disabled
-                        className="
-                        w-full
-                        text-left
-                        rounded-xl
-                        px-4
-                        py-2.5
-                        text-sm
-                       text-white/25
-                        cursor-not-allowed
-                      "
-                      >
-                        Logistics
-                      </button>
-
-                      <button
-                        disabled
-                        className="
-                        w-full
-                        text-left
-                        rounded-xl
-                        px-4
-                        py-2.5
-                        text-sm
-                       text-white/25
-                        cursor-not-allowed
-                      "
-                      >
-                        Deliverables
-                      </button>
-
                     </div>
 
                   )}
@@ -1080,6 +1047,14 @@ export default function Sidebar({ open, setOpen }) {
                       Reports
                     </Link>
 
+                    {can("production_invoices.view") && (
+                      <Link
+                        href="/dashboard/invoices/production-invoices"
+                        className={subMenuClass("/dashboard/invoices/production-invoices")}
+                      >
+                        Production Invoices
+                      </Link>
+                    )}
                   </div>
 
                 )}

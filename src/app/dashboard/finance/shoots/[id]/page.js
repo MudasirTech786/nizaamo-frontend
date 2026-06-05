@@ -31,6 +31,7 @@ export default function ShootFinanceReportPage() {
     const [loading, setLoading] = useState(true);
     const [shoot, setShoot] = useState(null);
     const [finance, setFinance] = useState(null);
+    const [invoices, setInvoices] = useState([]);
     const [expenses, setExpenses] = useState([]);
     const [details, setDetails] = useState({
         crew: [],
@@ -44,13 +45,19 @@ export default function ShootFinanceReportPage() {
     const fetchReport = async () => {
         try {
             setLoading(true);
-            const [shootRes, financeRes, expenseRes, detailsRes] =
-                await Promise.all([
-                    api.get(`/shoots/${shootId}`),
-                    api.get(`/shoots/${shootId}/finance`),
-                    api.get(`/shoots/${shootId}/expenses`),
-                    api.get(`/shoots/${shootId}/finance-details`),
-                ]);
+            const [
+                shootRes,
+                financeRes,
+                expenseRes,
+                detailsRes,
+                invoicesRes
+            ] = await Promise.all([
+                api.get(`/shoots/${shootId}`),
+                api.get(`/shoots/${shootId}/finance`),
+                api.get(`/shoots/${shootId}/expenses`),
+                api.get(`/shoots/${shootId}/finance-details`),
+                api.get(`/production-invoices/shoot/${shootId}`)
+            ]);
             setShoot(shootRes.data);
             setFinance(financeRes.data);
             setExpenses(expenseRes.data?.data || []);
@@ -62,6 +69,8 @@ export default function ShootFinanceReportPage() {
                     expenses: [],
                 }
             );
+
+            setInvoices(invoicesRes.data || []);
         } catch {
             toast.error("Failed to load report");
         } finally {
@@ -205,10 +214,46 @@ export default function ShootFinanceReportPage() {
                                 </div>
 
                                 <div className="flex items-center gap-3">
-                                    <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold uppercase tracking-wide">
+
+                                    <button
+                                        className="
+            px-4 py-2
+            rounded-xl
+            bg-blue-600
+            text-white
+            text-sm
+            font-bold
+            hover:bg-blue-700
+        "
+                                        onClick={() =>
+                                            router.push(
+                                                `/dashboard/invoices/production-invoices/create?shoot_id=${shoot.id}`
+                                            )
+                                        }
+                                    >
+                                        Create Invoice
+                                    </button>
+
+                                    <span className="
+        inline-flex
+        items-center
+        gap-1.5
+        px-4
+        py-2
+        rounded-full
+        bg-emerald-50
+        border
+        border-emerald-200
+        text-emerald-700
+        text-xs
+        font-bold
+        uppercase
+        tracking-wide
+    ">
                                         <CheckCircle2 size={12} />
                                         {shoot.status}
                                     </span>
+
                                 </div>
                             </div>
                         </div>
@@ -217,23 +262,24 @@ export default function ShootFinanceReportPage() {
                     {/* ── SUMMARY CARDS ── */}
                     <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
                         <MetricCard
-                            label="Revenue"
-                            value={finance.revenue}
-                            icon={DollarSign}
+                            label="Invoiced"
+                            value={finance.invoiced}
+                            icon={Receipt}
                             accent="blue"
                         />
+
                         <MetricCard
-                            label="Total Cost"
-                            value={finance.total_cost}
-                            icon={Receipt}
-                            accent="slate"
-                        />
-                        <MetricCard
-                            label="Net Profit"
-                            value={finance.profit}
-                            icon={TrendingUp}
+                            label="Collected"
+                            value={finance.collected}
+                            icon={DollarSign}
                             accent="emerald"
-                            positive={finance.profit >= 0}
+                        />
+
+                        <MetricCard
+                            label="Outstanding"
+                            value={finance.outstanding}
+                            icon={TrendingUp}
+                            accent="slate"
                         />
                         <MarginCard margin={profitMargin} />
                     </div>
@@ -355,8 +401,8 @@ export default function ShootFinanceReportPage() {
                                                             ${isActive
                                                                 ? "bg-blue-600 border-blue-600 text-white shadow-lg shadow-blue-200 scale-110"
                                                                 : isPast
-                                                                ? "bg-blue-50 border-blue-200 text-blue-500"
-                                                                : "bg-white border-slate-200 text-slate-500 group-hover:border-blue-300 group-hover:text-blue-600 group-hover:bg-blue-50"
+                                                                    ? "bg-blue-50 border-blue-200 text-blue-500"
+                                                                    : "bg-white border-slate-200 text-slate-500 group-hover:border-blue-300 group-hover:text-blue-600 group-hover:bg-blue-50"
                                                             }
                                                         `}
                                                     >
@@ -366,9 +412,8 @@ export default function ShootFinanceReportPage() {
 
                                                     {/* Label */}
                                                     <span
-                                                        className={`text-[10px] font-semibold transition-colors whitespace-nowrap ${
-                                                            isActive ? "text-blue-600" : "text-slate-400"
-                                                        }`}
+                                                        className={`text-[10px] font-semibold transition-colors whitespace-nowrap ${isActive ? "text-blue-600" : "text-slate-400"
+                                                            }`}
                                                     >
                                                         Day {day}
                                                     </span>
@@ -467,6 +512,145 @@ export default function ShootFinanceReportPage() {
                         </div>
                     </div>
 
+                    <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+
+                        <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
+
+                            <h2 className="text-lg font-bold text-slate-800">
+                                Production Invoices
+                            </h2>
+
+                            <span className="text-xs font-bold text-slate-400">
+                                {invoices.length} Invoices
+                            </span>
+
+                        </div>
+
+                        <div className="overflow-x-auto">
+
+                            <table className="w-full">
+
+                                <thead>
+
+                                    <tr className="bg-slate-50 border-b border-slate-100">
+
+                                        <th className="px-6 py-4 text-left">
+                                            Invoice #
+                                        </th>
+
+                                        <th className="px-6 py-4 text-left">
+                                            Title
+                                        </th>
+
+                                        <th className="px-6 py-4 text-left">
+                                            Total
+                                        </th>
+
+                                        <th className="px-6 py-4 text-left">
+                                            Paid
+                                        </th>
+
+                                        <th className="px-6 py-4 text-left">
+                                            Balance
+                                        </th>
+
+                                        <th className="px-6 py-4 text-left">
+                                            Status
+                                        </th>
+
+                                    </tr>
+
+                                </thead>
+
+                                <tbody>
+
+                                    {invoices.length === 0 ? (
+
+                                        <tr>
+
+                                            <td
+                                                colSpan={6}
+                                                className="
+                                px-6
+                                py-12
+                                text-center
+                                text-slate-400
+                            "
+                                            >
+                                                No invoices found
+                                            </td>
+
+                                        </tr>
+
+                                    ) : (
+
+                                        invoices.map(invoice => (
+
+                                            <tr
+                                                key={invoice.id}
+                                                className="
+                                border-b
+                                border-slate-100
+                            "
+                                            >
+
+                                                <td className="px-6 py-4">
+                                                    <button
+                                                        onClick={() =>
+                                                            router.push(
+                                                                `/dashboard/invoices/production-invoices/${invoice.id}`
+                                                            )
+                                                        }
+                                                        className="
+            text-blue-600
+            font-semibold
+            hover:underline
+        "
+                                                    >
+                                                        {invoice.invoice_number}
+                                                    </button>
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    {invoice.title}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    Rs {Number(
+                                                        invoice.total_amount
+                                                    ).toLocaleString()}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    Rs {Number(
+                                                        invoice.paid_amount
+                                                    ).toLocaleString()}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    Rs {Number(
+                                                        invoice.balance_due
+                                                    ).toLocaleString()}
+                                                </td>
+
+                                                <td className="px-6 py-4">
+                                                    {invoice.status}
+                                                </td>
+
+                                            </tr>
+
+                                        ))
+
+                                    )}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
                     {/* ── EXPENSE RECORDS ── */}
                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between">
@@ -506,9 +690,8 @@ export default function ShootFinanceReportPage() {
                                         expenses.map((expense, i) => (
                                             <tr
                                                 key={expense.id}
-                                                className={`border-b border-slate-50 hover:bg-blue-50/30 transition-colors ${
-                                                    i % 2 === 0 ? "bg-white" : "bg-slate-50/30"
-                                                }`}
+                                                className={`border-b border-slate-50 hover:bg-blue-50/30 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-slate-50/30"
+                                                    }`}
                                             >
                                                 <td className="px-6 py-4">
                                                     <span className="inline-flex px-3 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-bold">
@@ -602,9 +785,8 @@ function MetricCard({ label, value, icon: Icon, accent, positive }) {
                 </div>
             </div>
             <p
-                className={`text-3xl font-black tracking-tight ${
-                    isNegative ? "text-red-600" : "text-slate-900"
-                }`}
+                className={`text-3xl font-black tracking-tight ${isNegative ? "text-red-600" : "text-slate-900"
+                    }`}
             >
                 Rs {Number(value || 0).toLocaleString()}
             </p>
@@ -712,9 +894,8 @@ function SectionTable({ rows, columns, activeDays }) {
                 {rows.map((row, i) => (
                     <tr
                         key={i}
-                        className={`border-b border-slate-50 hover:bg-blue-50/30 transition-colors ${
-                            i % 2 === 0 ? "bg-white" : "bg-slate-50/20"
-                        }`}
+                        className={`border-b border-slate-50 hover:bg-blue-50/30 transition-colors ${i % 2 === 0 ? "bg-white" : "bg-slate-50/20"
+                            }`}
                     >
                         <td className="px-6 py-4 text-slate-300 text-xs font-bold w-10">
                             {String(i + 1).padStart(2, "0")}
