@@ -428,6 +428,88 @@ export default function ProductionInvoiceDetailPage() {
 
                 </div>
 
+                <div className="
+    bg-white
+    rounded-3xl
+    border
+    overflow-hidden
+">
+
+                    <div className="
+        px-8
+        py-5
+        border-b
+    ">
+                        <h2 className="
+            text-xl
+            font-bold
+        ">
+                            Invoice Items
+                        </h2>
+                    </div>
+
+                    <table className="w-full">
+
+                        <thead>
+
+                            <tr>
+
+                                <th className="px-6 py-4 text-left">
+                                    Description
+                                </th>
+
+                                <th className="px-6 py-4 text-left">
+                                    Qty
+                                </th>
+
+                                <th className="px-6 py-4 text-left">
+                                    Rate
+                                </th>
+
+                                <th className="px-6 py-4 text-left">
+                                    Amount
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {invoice.items?.map(item => (
+
+                                <tr key={item.id}>
+
+                                    <td className="px-6 py-4">
+                                        {item.description}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        {item.quantity}
+                                    </td>
+
+                                    <td className="px-6 py-4">
+                                        Rs {Number(
+                                            item.unit_price
+                                        ).toLocaleString()}
+                                    </td>
+
+                                    <td className="px-6 py-4 font-bold">
+                                        Rs {Number(
+                                            item.line_total
+                                        ).toLocaleString()}
+                                    </td>
+
+                                </tr>
+
+                            ))}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
             </div>
 
         </Layout>

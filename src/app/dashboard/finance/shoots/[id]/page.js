@@ -126,16 +126,47 @@ export default function ShootFinanceReportPage() {
         (sum, r) => sum + (r.rate ? r.rate * activeDays : r.amount || 0),
         0
     );
+    const expenseCost = expenses.reduce(
+        (sum, expense) =>
+            sum + Number(expense.amount || 0),
+        0
+    );
 
-    const totalBreakdown = crewCost + logisticsCost + inventoryCost;
+    const totalBreakdown =
+        crewCost +
+        logisticsCost +
+        inventoryCost +
+        expenseCost;
     const crewPct = totalBreakdown ? ((crewCost / totalBreakdown) * 100).toFixed(0) : 0;
     const logisticsPct = totalBreakdown ? ((logisticsCost / totalBreakdown) * 100).toFixed(0) : 0;
     const inventoryPct = totalBreakdown ? ((inventoryCost / totalBreakdown) * 100).toFixed(0) : 0;
+    const expensePct = totalBreakdown ? ((expenseCost / totalBreakdown) * 100).toFixed(0) : 0;
 
     const sectionTabs = [
-        { key: "crew", label: "Crew", icon: Users, count: details.crew?.length },
-        { key: "logistics", label: "Logistics", icon: Truck, count: details.logistics?.length },
-        { key: "inventory", label: "Inventory", icon: Package, count: details.inventory?.length },
+        {
+            key: "crew",
+            label: "Crew",
+            icon: Users,
+            count: details.crew?.length
+        },
+        {
+            key: "logistics",
+            label: "Logistics",
+            icon: Truck,
+            count: details.logistics?.length
+        },
+        {
+            key: "inventory",
+            label: "Inventory",
+            icon: Package,
+            count: details.inventory?.length
+        },
+        {
+            key: "expenses",
+            label: "Expenses",
+            icon: Receipt,
+            count: expenses?.length
+        },
     ];
 
     return (
@@ -279,6 +310,12 @@ export default function ShootFinanceReportPage() {
                             label="Outstanding"
                             value={finance.outstanding}
                             icon={TrendingUp}
+                            accent="slate"
+                        />
+                        <MetricCard
+                            label="Other Expenses"
+                            value={expenseCost}
+                            icon={Receipt}
                             accent="slate"
                         />
                         <MarginCard margin={profitMargin} />
@@ -449,6 +486,13 @@ export default function ShootFinanceReportPage() {
                                     color="sky"
                                     icon={Package}
                                 />
+                                <CostBar
+                                    label="Expenses"
+                                    amount={expenseCost}
+                                    pct={expensePct}
+                                    color="blue"
+                                    icon={Receipt}
+                                />
                             </div>
 
                             {/* ── TABBED SECTION TABLES ── */}
@@ -505,6 +549,17 @@ export default function ShootFinanceReportPage() {
                                             activeDays={activeDays}
                                             rows={details.inventory}
                                             columns={["name", "quantity", "amount"]}
+                                        />
+                                    )}
+                                    {activeSection === "expenses" && (
+                                        <SectionTable
+                                            activeDays={1}
+                                            rows={expenses}
+                                            columns={[
+                                                "category",
+                                                "description",
+                                                "amount",
+                                            ]}
                                         />
                                     )}
                                 </div>
@@ -873,6 +928,7 @@ function SectionTable({ rows, columns, activeDays }) {
         description: "Description",
         quantity: "Quantity",
         amount: "Amount",
+        category: "Category",
     };
 
     return (
