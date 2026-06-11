@@ -97,6 +97,7 @@ export default function ScannerPage() {
                 { deviceId: { exact: camId } },
                 { fps: 12, qrbox: { width: 230, height: 230 }, aspectRatio: 1 },
                 async (decoded) => {
+                    console.log("SCANNED:", decoded);
                     setScanCount(c => c + 1);
                     await stopScanner();
                     await lookupCode(decoded);
