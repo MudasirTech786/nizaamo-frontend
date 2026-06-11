@@ -149,9 +149,7 @@ export default function Sidebar({ open, setOpen }) {
     pathname.includes("/dashboard/leaves");
 
   const inventoryActive =
-    pathname.includes("/products") ||
-    pathname.includes("/categories") ||
-    pathname.includes("/stock");
+    pathname.includes("/dashboard/inventory");
 
   const productionsActive =
     pathname.includes("/dashboard/shoots") ||
@@ -792,6 +790,85 @@ export default function Sidebar({ open, setOpen }) {
                     >
                       Movements
                     </Link>
+
+                    {/* ================= ASSET TRACKING ================= */}
+
+                    <details className="group">
+
+                      <summary
+                        className="
+      flex
+      cursor-pointer
+      list-none
+      items-center
+      justify-between
+      rounded-xl
+      px-3
+      py-2
+      text-[13px]
+      font-medium
+      text-white/55
+      transition-all
+      duration-200
+      hover:bg-white/[0.03]
+      hover:text-white
+    "
+                      >
+
+                        <span>Asset Tracking</span>
+
+                        <ChevronDown
+                          size={14}
+                          className="
+        transition-transform
+        duration-300
+        group-open:rotate-180
+      "
+                        />
+
+                      </summary>
+
+                      <div
+                        className="
+      ml-4
+      mt-1
+      border-l
+      border-white/[0.04]
+      pl-4
+      space-y-1
+    "
+                      >
+
+                        <Link
+                          href="/dashboard/inventory/assets"
+                          className={subMenuClass(
+                            "/dashboard/inventory/assets"
+                          )}
+                        >
+                          Assets
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/scanner"
+                          className={subMenuClass(
+                            "/dashboard/inventory/scanner"
+                          )}
+                        >
+                          QR Scanner
+                        </Link>
+
+                        <Link
+                          href="/dashboard/inventory/assets/labels"
+                          className={subMenuClass(
+                            "/dashboard/inventory/assets/labels"
+                          )}
+                        >
+                          Print Labels
+                        </Link>
+
+                      </div>
+
+                    </details>
 
                     {/* ================= USAGE ================= */}
 

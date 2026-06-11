@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import Layout from "@/components/Layout";
 import api from "@/lib/api";
-
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import {
@@ -21,6 +21,8 @@ export default function InventoryItemsPage() {
 
   const [items, setItems] =
     useState([]);
+
+  const router = useRouter();
 
   const [categories, setCategories] =
     useState([]);
@@ -71,6 +73,8 @@ export default function InventoryItemsPage() {
     status: "available",
 
     notes: "",
+
+    track_serial: false,
   };
 
   const [form, setForm] =
@@ -178,7 +182,7 @@ export default function InventoryItemsPage() {
       toast.error(
         error.response?.data
           ?.message ||
-          "Create failed"
+        "Create failed"
       );
     }
   };
@@ -215,10 +219,12 @@ export default function InventoryItemsPage() {
       toast.error(
         error.response?.data
           ?.message ||
-          "Update failed"
+        "Update failed"
       );
     }
   };
+
+
 
   /* ====================================================== */
   /* DELETE */
@@ -251,7 +257,7 @@ export default function InventoryItemsPage() {
       toast.error(
         error.response?.data
           ?.message ||
-          "Delete failed"
+        "Delete failed"
       );
     }
   };
@@ -274,8 +280,11 @@ export default function InventoryItemsPage() {
       model: item.model || "",
 
       sku: item.sku || "",
-      
+
       daily_rental_value: item.daily_rental_value || "0",
+
+      track_serial:
+        item.track_serial || false,
 
       serial_number:
         item.serial_number || "",
@@ -356,11 +365,10 @@ export default function InventoryItemsPage() {
         pb-24
         transition-all
 
-        ${
-          showModal ||
+        ${showModal ||
           editModal
-            ? "pointer-events-none opacity-10"
-            : ""
+          ? "pointer-events-none opacity-10"
+          : ""
         }
       `}>
 
@@ -508,12 +516,9 @@ export default function InventoryItemsPage() {
                   <ItemCard
                     key={item.id}
                     item={item}
-                    onDelete={
-                      deleteItem
-                    }
-                    onEdit={
-                      openEdit
-                    }
+                    onDelete={deleteItem}
+                    onEdit={openEdit}
+                    router={router}
                   />
 
                 )
@@ -766,6 +771,29 @@ export default function InventoryItemsPage() {
 
                   </Field>
 
+                  <Field label="Inventory Type">
+
+                    <select
+                      value={form.type}
+                      className={inputClass}
+                      onChange={(e) =>
+                        setForm({
+                          ...form,
+                          type: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="asset">
+                        Asset
+                      </option>
+
+                      <option value="consumable">
+                        Consumable
+                      </option>
+                    </select>
+
+                  </Field>
+
                   <Field label="Rental Rate (per day)">
 
                     <input
@@ -788,26 +816,29 @@ export default function InventoryItemsPage() {
 
                   </Field>
 
-                  <Field label="Serial Number">
+                  {!form.track_serial && (
 
-                    <input
-                      value={
-                        form.serial_number
-                      }
-                      className={
-                        inputClass
-                      }
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          serial_number:
-                            e.target
-                              .value,
-                        })
-                      }
-                    />
+                    <Field label="Serial Number">
 
-                  </Field>
+                      <input
+                        value={
+                          form.serial_number
+                        }
+                        className={
+                          inputClass
+                        }
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            serial_number:
+                              e.target.value,
+                          })
+                        }
+                      />
+
+                    </Field>
+
+                  )}
 
                 </div>
 
@@ -824,27 +855,45 @@ export default function InventoryItemsPage() {
                   md:grid-cols-2
                 ">
 
-                  <Field label="Quantity">
+                  <Field
+                    label={
+                      form.track_serial
+                        ? "Number of Units"
+                        : "Quantity"
+                    }
+                  >
 
                     <input
                       type="number"
-                      value={
-                        form.quantity
+                      min="0"
+                      value={form.quantity}
+                      disabled={
+                        editModal &&
+                        form.track_serial
                       }
-                      className={
-                        inputClass
-                      }
+                      className={inputClass}
                       onChange={(e) =>
                         setForm({
                           ...form,
-                          quantity:
-                            Number(
-                              e.target
-                                .value
-                            ),
+                          quantity: Number(
+                            e.target.value
+                          ),
                         })
                       }
                     />
+
+                    {form.track_serial && (
+                      <p className="
+      mt-2
+      text-xs
+      text-slate-500
+    ">
+                        One asset record will be
+                        created for each unit.
+                        Example: 5 units =
+                        CAM-00001 to CAM-00005
+                      </p>
+                    )}
 
                   </Field>
 
@@ -872,6 +921,40 @@ export default function InventoryItemsPage() {
 
                   </Field>
 
+                  <Field label="Track Individual Assets">
+
+                    <label className="
+    flex
+    items-center
+    gap-3
+    rounded-2xl
+    border
+    border-slate-200
+    bg-white
+    px-4
+    py-3
+  ">
+
+                      <input
+                        type="checkbox"
+                        checked={form.track_serial}
+                        onChange={(e) =>
+                          setForm({
+                            ...form,
+                            track_serial:
+                              e.target.checked,
+                          })
+                        }
+                      />
+
+                      <span>
+                        Generate individual
+                        assets & QR codes
+                      </span>
+
+                    </label>
+
+                  </Field>
                 </div>
 
               </Section>
@@ -1022,11 +1105,12 @@ export default function InventoryItemsPage() {
 
           </div>
 
-        </div>
+        </div >
 
-      )}
+      )
+      }
 
-    </Layout>
+    </Layout >
   );
 }
 
@@ -1038,6 +1122,7 @@ function ItemCard({
   item,
   onDelete,
   onEdit,
+  router,
 }) {
 
   const [showMenu, setShowMenu] =
@@ -1063,17 +1148,40 @@ function ItemCard({
         <div>
 
           <div className="
-            inline-flex
-            rounded-full
-            bg-green-100
-            px-3
-            py-1
-            text-xs
-            font-semibold
-            text-green-700
-          ">
+  flex
+  flex-wrap
+  gap-2
+">
 
-            {item.status}
+            <div className="
+    inline-flex
+    rounded-full
+    bg-green-100
+    px-3
+    py-1
+    text-xs
+    font-semibold
+    text-green-700
+  ">
+              {item.status}
+            </div>
+
+            {item.track_serial && (
+
+              <div className="
+      inline-flex
+      rounded-full
+      bg-blue-100
+      px-3
+      py-1
+      text-xs
+      font-semibold
+      text-blue-700
+    ">
+                QR Tracked
+              </div>
+
+            )}
 
           </div>
 
@@ -1111,6 +1219,16 @@ function ItemCard({
               {" "}
               {item.quantity}
             </div>
+
+            {item.track_serial && (
+
+              <div>
+                Assets:
+                {" "}
+                {item.assets_count}
+              </div>
+
+            )}
 
           </div>
 
@@ -1158,6 +1276,30 @@ function ItemCard({
               bg-white
               shadow-lg
             ">
+
+              <button
+                onClick={() =>
+                  router.push(
+                    `/dashboard/inventory/assets?item=${item.id}`
+                  )}
+                className="
+    flex
+    w-full
+    items-center
+    gap-3
+    px-4
+    py-3
+    text-left
+    text-sm
+    hover:bg-gray-50
+  "
+              >
+
+                <Package size={16} />
+
+                View Assets
+
+              </button>
 
               <button
                 onClick={() =>
